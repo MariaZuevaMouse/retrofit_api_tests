@@ -35,7 +35,7 @@ public class CreateProductTest extends ProductBase {
 
     @SneakyThrows
     @Test
-    void creteProductWithId() {
+    void creteProductWithAlreadyExistId() {
         product.setId(1);
         Response<Product> productResponse = productService.createProduct(product)
                 .execute();
@@ -44,7 +44,7 @@ public class CreateProductTest extends ProductBase {
 
     @SneakyThrows
     @Test
-    @DisplayName(value = "Create product with ubesxistent category: change error code required from 500 to 400 range")
+    @DisplayName(value = "Create product with nonesxistent category: change error code required from 500 to 400 range")
     void creteProductNonexistentCategory() {
         product.setCategoryTitle("1");
         Response<Product> productResponse = productService.createProduct(product)
@@ -52,6 +52,13 @@ public class CreateProductTest extends ProductBase {
         assertThat(productResponse.code(), CoreMatchers.is(500));
     }
 
+    @SneakyThrows
+    @Test
+    void creteProductWithNonFilledInFieldsTest() {
+        product = new Product();
+        Response<Product> productResponse = productService.createProduct(product).execute();
+        assertThat(productResponse.code(), CoreMatchers.is(500));
+    }
 
     @SneakyThrows
     void deleteProduct() {
