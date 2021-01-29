@@ -3,12 +3,9 @@ package com.company.mz.services;
 import com.company.mz.dto.Product;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
-import retrofit2.http.Body;
-import retrofit2.http.DELETE;
-import retrofit2.http.POST;
-import retrofit2.http.Path;
+import retrofit2.http.*;
 
-import javax.annotation.PostConstruct;
+import java.util.List;
 
 public interface ProductService {
     @POST("products")
@@ -16,4 +13,13 @@ public interface ProductService {
 
     @DELETE("products/{id}")
     Call<ResponseBody> deleteProduct(@Path("id") int id);
+
+    @GET("products")
+    Call<List<Product>> getAllProducts();
+
+    @GET("products/{id}")
+    Call<Product> getById(@Path("id") int id);
+
+    @PUT("products")
+    Call<Product> modifyProduct(@Body Product modifiedProductDate);
 }

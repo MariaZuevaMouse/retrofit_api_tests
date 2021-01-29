@@ -1,7 +1,8 @@
 package com.company.mz.base.enums;
 
 public enum Category {
-    FOOD(1, "Food");
+    FOOD(1, "Food"),
+    ELECTRONIC(2, "Electronic");
 
     public final int id;
     public final String title;

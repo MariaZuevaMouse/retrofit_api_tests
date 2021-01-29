@@ -1,34 +1,19 @@
-package com.company.mz;
+package com.company.mz.product;
 
 import com.company.mz.base.enums.Category;
 import com.company.mz.dto.Product;
-import com.company.mz.services.ProductService;
-import com.company.mz.utility.RetrofitUtil;
-import com.github.javafaker.Faker;
 import lombok.SneakyThrows;
 import okhttp3.ResponseBody;
 import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import retrofit2.Response;
 
-import java.util.Locale;
-
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class CreateProductTest {
-    static ProductService productService;
-    Product product;
-    Faker faker = new Faker();
-    int id;
-
-    @BeforeAll
-    static void beforeAll() {
-        productService = RetrofitUtil.getRetrofit()
-                .create(ProductService.class);
-    }
+public class CreateProductTest extends ProductBase {
 
     @BeforeEach
     void setUp() {
@@ -45,12 +30,32 @@ public class CreateProductTest {
                 .execute();
         id = productResponse.body().getId();
         assertThat(productResponse.isSuccessful(), CoreMatchers.is(true));
+        deleteProduct();
     }
 
     @SneakyThrows
-    @AfterEach
-    void tearDown() {
-        final Response<ResponseBody> response = productService.deleteProduct(id).execute();
+    @Test
+    void creteProductWithId() {
+        product.setId(1);
+        Response<Product> productResponse = productService.createProduct(product)
+                .execute();
+        assertThat(productResponse.code(), CoreMatchers.is(400));
+    }
+
+    @SneakyThrows
+    @Test
+    @DisplayName(value = "Create product with ubesxistent category: change error code required from 500 to 400 range")
+    void creteProductNonexistentCategory() {
+        product.setCategoryTitle("1");
+        Response<Product> productResponse = productService.createProduct(product)
+                .execute();
+        assertThat(productResponse.code(), CoreMatchers.is(500));
+    }
+
+
+    @SneakyThrows
+    void deleteProduct() {
+        Response<ResponseBody> response = productService.deleteProduct(id).execute();
         assertThat(response.isSuccessful(), CoreMatchers.is(true));
     }
 }

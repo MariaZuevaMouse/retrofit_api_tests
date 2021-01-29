@@ -17,6 +17,42 @@
                     <target>8</target>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven.surfire.plagin}</version>
+                <configuration>
+                    <includes>
+                        <include>**/*Test*.java</include>
+                    </includes>
+                    <testFailureIgnore>true</testFailureIgnore>
+                    <argLine>
+                        -Dfile.encoding=UTF-8
+                    </argLine>
+                    <systemProperties>
+                        <property>
+                            <name>junit.jupiter.extensions.autodetection.enabled</name>
+                            <value>true</value>
+                        </property>
+                    </systemProperties>
+                    <systemPropertyVariables>
+                        <allure.results.directory>target/allure-results</allure.results.directory>
+                        <!--                        <allure.results.directory>${project.build.directory}/allure-results</allure.results.directory>-->
+                    </systemPropertyVariables>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>io.qameta.allure</groupId>
+                <artifactId>allure-maven</artifactId>
+                <version>${allure-maven.version}</version>
+                <configuration>
+                    <reportVersion>${reportVersion.version}</reportVersion>
+                    <resultsDirectory>allure-results</resultsDirectory>
+                    <!--                    <reportDirectory>${project.build.directory}/allure-results</reportDirectory>-->
+                    <!--                    <reportDirectory>${project.build.directory}/allure-results</reportDirectory>-->
+                </configuration>
+
+            </plugin>
         </plugins>
     </build>
     <properties>
@@ -26,6 +62,9 @@
         <jackson.ver>2.12.1</jackson.ver>
         <converter.jackson>2.9.0</converter.jackson>
         <loging.inter.ver>3.9.0</loging.inter.ver>
+        <allure-maven.version>2.10.0</allure-maven.version>
+        <reportVersion.version>2.13.3</reportVersion.version>
+        <maven.surfire.plagin>2.22.2</maven.surfire.plagin>
     </properties>
     <dependencies>
         <dependency>
@@ -79,7 +118,7 @@
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest</artifactId>
             <version>2.2</version>
-            <scope>test</scope>
+<!--            <scope>test</scope>-->
         </dependency>
         <dependency>
             <groupId>com.squareup.okhttp3</groupId>
@@ -90,6 +129,17 @@
             <groupId>com.github.javafaker</groupId>
             <artifactId>javafaker</artifactId>
             <version>1.0.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest</artifactId>
+            <version>2.2</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.qameta.allure</groupId>
+            <artifactId>allure-junit5</artifactId>
+            <version>2.13.2</version>
         </dependency>
     </dependencies>
 

@@ -1,12 +1,10 @@
-package com.company.mz;
+package com.company.mz.category;
 
 import com.company.mz.base.enums.Category;
 import com.company.mz.dto.GetCategoryResponse;
 import com.company.mz.services.CategoryService;
 import com.company.mz.utility.RetrofitUtil;
 import lombok.SneakyThrows;
-import okhttp3.ResponseBody;
-import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import retrofit2.Response;
