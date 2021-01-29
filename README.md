@@ -14,14 +14,14 @@ launch command:
 
 ` java -classpath ./bin main/java/ru/geekbrains/mini/market/MiniMarketApplication`
 
-###Learn API service, documentation:
-#####open mini-market ui throw browser 
+### Learn API service, documentation:
+##### open mini-market ui throw browser 
 http://localhost:8189/market
 
-#####see ui documentation in browser 
+##### see ui documentation in browser 
 http://localhost:8189/market/swagger-ui.html#/category-controller
 
-#####console can be opened by URL:
+##### console can be opened by URL:
 http://localhost:8189/market/h2-console
 
 ### to test API download test project:
@@ -30,7 +30,7 @@ http://localhost:8189/market/h2-console
 and launch test:
 `mvn clean test allure:serve`
 
-#####There is considered several endpoints testing:
+##### There is considered several endpoints testing:
 
 POST  - create product:
  - positive test
