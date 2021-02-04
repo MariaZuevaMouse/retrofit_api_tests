@@ -5,6 +5,7 @@ import com.company.mz.dto.Product;
 import lombok.SneakyThrows;
 import okhttp3.ResponseBody;
 import org.hamcrest.CoreMatchers;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import retrofit2.Response;
@@ -37,6 +38,7 @@ public class DeleteProductTest extends ProductBase {
     void deleteNonexistentProductTest() {
         Response<ResponseBody> bodyResponse = productService.deleteProduct(id).execute();
         assertThat(bodyResponse.isSuccessful(), CoreMatchers.is(true));
+        assertThat(productsMapper.selectByPrimaryKey(Long.valueOf(id)), CoreMatchers.nullValue());
         Response<ResponseBody> response = productService.deleteProduct(id).execute();
         assertThat(response.isSuccessful(), CoreMatchers.is(false));
         assertThat(response.code(), CoreMatchers.is(500));
@@ -54,5 +56,16 @@ public class DeleteProductTest extends ProductBase {
         }
         Response<ResponseBody> bodyResponse = productService.deleteProduct(id).execute();
         assertThat(bodyResponse.isSuccessful(), CoreMatchers.is(true));
+    }
+
+    @Test
+    void deleteProductThroughDbTest() {
+        int i = productsMapper.deleteByPrimaryKey(Long.valueOf(id));
+        assertThat(i, CoreMatchers.is(1));
+    }
+
+    @AfterEach
+    void tearDown() {
+        assertThat(productsMapper.selectByPrimaryKey(Long.valueOf(id)), CoreMatchers.nullValue());
     }
 }

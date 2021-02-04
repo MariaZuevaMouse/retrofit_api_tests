@@ -30,7 +30,7 @@ public class CreateProductTest extends ProductBase {
                 .execute();
         id = productResponse.body().getId();
         assertThat(productResponse.isSuccessful(), CoreMatchers.is(true));
-        deleteProduct();
+//        deleteProduct();
     }
 
     @SneakyThrows

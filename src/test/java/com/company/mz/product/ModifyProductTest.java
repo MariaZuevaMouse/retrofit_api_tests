@@ -2,13 +2,12 @@ package com.company.mz.product;
 
 import com.company.mz.base.enums.Category;
 import com.company.mz.dto.Product;
+import com.company.mz.orm.db.model.Products;
+import com.company.mz.orm.db.model.ProductsExample;
 import lombok.SneakyThrows;
 import okhttp3.ResponseBody;
 import org.hamcrest.CoreMatchers;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import retrofit2.Response;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -28,6 +27,7 @@ public class ModifyProductTest extends ProductBase {
         product.setCategoryTitle(productCreated.body().getCategoryTitle());
         product.setPrice(productCreated.body().getPrice());
         product.setTitle(productCreated.body().getTitle());
+        id = product.getId();
     }
 
     @SneakyThrows
@@ -93,19 +93,40 @@ public class ModifyProductTest extends ProductBase {
 
     @SneakyThrows
     @Test
-    @DisplayName(value = "Modify price to negative value should be forbidden")
+    @DisplayName(value = "BUG: Modify price to negative value should be forbidden")
     void ModifyPriceToNegativeValueTest() {
         int negativePrice = -1;
         product.setPrice(negativePrice);
         Response<Product> modifiedProduct = productService.modifyProduct(product).execute();
         assertThat(modifiedProduct.isSuccessful(), CoreMatchers.is(true));
+    }
 
+    @Test
+//    @Disabled
+    void modifyProductThroughDbTest() {
+        Products testProducts = productsMapper.selectByPrimaryKey(Long.valueOf(product.getId()));
+        System.out.println(testProducts);
+        int newPrice= testProducts.getPrice()*2;
+        String newTitle = testProducts.getTitle()+"updated Test";
+        testProducts.setPrice(newPrice);
+        testProducts.setTitle(newTitle);
+        ProductsExample productsExample = new ProductsExample();
+        productsExample .createCriteria().andIdEqualTo(testProducts.getId().longValue());
+
+        productsMapper.updateByExample(testProducts, productsExample);
+        System.out.println("modify done");
+        assertThat(productsMapper.selectByPrimaryKey(testProducts.getId()).getPrice(), CoreMatchers.is(newPrice));
+        assertThat(productsMapper.selectByPrimaryKey(testProducts.getId()).getTitle(), CoreMatchers.is(newTitle));
+        System.out.println("assertion done");
     }
 
     @SneakyThrows
     @AfterEach
     void tearDown() {
-        Response<ResponseBody> response = productService.deleteProduct(product.getId()).execute();
-        assertThat(response.isSuccessful(), CoreMatchers.is(true));
+        int i = productsMapper.deleteByPrimaryKey(Long.valueOf(id));
+        assertThat(i, CoreMatchers.is(1));
+
+        System.out.println(Long.valueOf(product.getId()));
+        assertThat(productsMapper.selectByPrimaryKey(Long.valueOf(id)), CoreMatchers.nullValue());
     }
 }
