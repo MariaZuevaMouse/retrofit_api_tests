@@ -67,5 +67,8 @@ GET all products:
  - positive test
 
 
+####
+Added ORM MyBatis and some checks in db using ORM 
+(ORM - Object-Relational Mapping)
 
 
